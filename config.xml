@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <itunes library="/Volumes/b2Music/MaxOnNet/iTunes Library.xml">
+        <library path="db_4gain"/>
+    </itunes>
+    <yator>
+        <cache path="/Volumes/b2Music/Yator/cache/"/>
+        <structure path="/Volumes/b2Music/Yator/" minimal_cd="6"/>
+    </yator>
+</configuration>
