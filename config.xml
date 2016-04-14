@@ -5,4 +5,5 @@
         <cache path="/Volumes/b2Music/Yator/cache/"/>
         <structure path="/Volumes/b2Music/Yator/" minimal_cd="6"/>
     </yator>
+    <transcode threads="6"/>
 </configuration>
