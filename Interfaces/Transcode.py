@@ -133,6 +133,7 @@ class AudioTranscode:
     ]
     Decoders = [
         Decoder('m4a', ['ffmpeg', '-i', 'INPUT', '-f', 'wav', '-acodec', 'pcm_s16le', '-']),
+        Decoder('mp3', ['ffmpeg', '-i', 'INPUT', '-f', 'wav', '-acodec', 'pcm_s16le', '-']),
     ]
 
     def __init__(self, debug=False):
