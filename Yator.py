@@ -30,14 +30,17 @@ class Yator:
         self.cache_path = self.config.get("yator", "cache", "path", "")
         self.structure_path = self.config.get("yator", "structure", "path", "")
 
+        self.bitrate = self.config.get("transcode", "", "bitrate", "256")
+
         self.library = Library(self.config.get("itunes", "", "library", ""))
 
+        self.structure_prepare()
         self.queue_prepare()
         self.queue_worker()
         self.song_rebase()
 
 
-    def song_rebase(self):
+    def structure_prepare(self):
         if not os.path.isdir(self.cache_path):
             os.makedirs(self.cache_path, 0755)
 
@@ -57,6 +60,7 @@ class Yator:
             if not os.path.isdir(cd_path):
                 os.makedirs(cd_path, 0755)
 
+    def song_rebase(self):
         playlists = self.library.getPlaylistNames()
 
         for playlist in playlists:
@@ -107,10 +111,10 @@ class Yator:
     def queue_worker(self):
         thread_count = self.config.get("transcode", "", "threads", "2")
 
-        print 'Зупускаем {0} транскодеров(а).'.format(thread_count)
+        print 'Зупускаем {0} транскодеров(а) c битрейтом в {1}.'.format(thread_count, self.bitrate)
 
         for thread_index in xrange(0, int(thread_count), 1):
-            worker = Thread(target=self.thread_worker, args=(thread_index, self.queue,))
+            worker = Thread(target=self.thread_worker, args=(thread_index, self.queue, self.bitrate))
             worker.setDaemon(True)
             worker.start()
 
@@ -121,9 +125,9 @@ class Yator:
         transcode = AudioTranscode()
 
         while True:
-            [file_orig, file_transcoded] = queue.get()
+            [file_orig, file_transcoded, file_bitrate] = queue.get()
             print '{0}: {1}'.format(thread_index, file_orig)
-            transcode.transcode(file_orig, file_transcoded, bitrate=256)
+            transcode.transcode(file_orig, file_transcoded, bitrate=file_bitrate)
             queue.task_done()
 
     @staticmethod
