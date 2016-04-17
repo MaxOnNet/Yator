@@ -21,7 +21,6 @@ from Interfaces.Transcode import AudioTranscode
 
 
 class Yator:
-    playlist_re = re.compile('Yator\sCD(?P<disk>\d\d)')
 
     def __init__(self):
         self.config = Config()
@@ -33,6 +32,7 @@ class Yator:
         self.bitrate = self.config.get("transcode", "", "bitrate", "256")
 
         self.library = Library(self.config.get("itunes", "", "library", ""))
+        self.playlist_re = re.compile(self.config.get("itunes", "", "playlist_regexp", ""))
 
         self.structure_prepare()
         self.queue_prepare()
