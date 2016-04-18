@@ -32,7 +32,7 @@ class Yator:
         self.bitrate = self.config.get("transcode", "", "bitrate", "256")
 
         self.library = Library(self.config.get("itunes", "", "library", ""))
-        self.playlist_re = re.compile(self.config.get("itunes", "", "playlist_regexp", ""))
+        self.playlist_re = re.compile("Yator\sCD(?P<disk>\d\d)")
 
         self.structure_prepare()
         self.queue_prepare()
@@ -111,7 +111,7 @@ class Yator:
     def queue_worker(self):
         thread_count = self.config.get("transcode", "", "threads", "2")
 
-        print 'Зупускаем {0} транскодеров(а) c битрейтом в {1}.'.format(thread_count, self.bitrate)
+        print 'Зупускаем {0} транскодеров(а) c битрейтом в {1} килобит в секунду.'.format(thread_count, self.bitrate)
 
         for thread_index in xrange(0, int(thread_count), 1):
             worker = Thread(target=self.thread_worker, args=(thread_index, self.queue, self.bitrate))
@@ -121,11 +121,11 @@ class Yator:
         self.queue.join()
         print 'Транскодинг завершен.'
 
-    def thread_worker(self, thread_index, queue):
+    def thread_worker(self, thread_index, queue, file_bitrate):
         transcode = AudioTranscode()
 
         while True:
-            [file_orig, file_transcoded, file_bitrate] = queue.get()
+            [file_orig, file_transcoded] = queue.get()
             print '{0}: {1}'.format(thread_index, file_orig)
             transcode.transcode(file_orig, file_transcoded, bitrate=file_bitrate)
             queue.task_done()
